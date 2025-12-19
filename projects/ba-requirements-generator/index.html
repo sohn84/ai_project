@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BA Requirements Generator - VIBE Coding Spec Tool</title>
+    <meta name="description" content="Transform unstructured meeting notes into structured requirement specifications for VIBE coding">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <span class="icon">📋</span>
+                BA Requirements Generator
+            </h1>
+            <p class="subtitle">Transform meeting notes into structured VIBE coding specifications</p>
+        </header>
+
+        <main class="workspace">
+            <!-- Input Panel -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2>📝 Meeting Notes Input</h2>
+                    <button class="btn-secondary" id="clearBtn">
+                        <span class="icon">🗑️</span>
+                        Clear
+                    </button>
+                </div>
+                <div class="panel-content">
+                    <textarea 
+                        id="meetingInput" 
+                        placeholder="회의록 또는 요청 텍스트를 여기에 붙여넣으세요...&#10;&#10;예시:&#10;- 현재 사용자들이 예약 취소 과정에서 많은 어려움을 겪고 있음&#10;- 목표: 취소율을 10% 감소시키기&#10;- 사용자가 원클릭으로 예약을 취소할 수 있어야 함&#10;- 4/11까지 API 개발 완료 예정&#10;- 하단 팝업 슬라이스 UI 제약 사항 있음"
+                    ></textarea>
+                    <div class="input-stats">
+                        <span id="charCount">0 characters</span>
+                        <span id="wordCount">0 words</span>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn-primary" id="analyzeBtn">
+                        <span class="icon">✨</span>
+                        Analyze & Generate
+                    </button>
+                </div>
+            </section>
+
+            <!-- Output Panel -->
+            <section class="panel output-panel">
+                <div class="panel-header">
+                    <h2>📄 Requirements Specification</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" id="copyBtn" disabled>
+                            <span class="icon">📋</span>
+                            Copy
+                        </button>
+                        <button class="btn-secondary" id="exportBtn" disabled>
+                            <span class="icon">⬇️</span>
+                            Export MD
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="outputPreview" class="output-preview">
+                        <div class="empty-state">
+                            <span class="empty-icon">🎯</span>
+                            <p>분석 결과가 여기에 표시됩니다</p>
+                            <p class="empty-hint">왼쪽에 회의록을 입력하고 'Analyze & Generate' 버튼을 클릭하세요</p>
+                        </div>
+                    </div>
+                    <textarea id="outputMarkdown" style="display: none;"></textarea>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built for Business Analysts • VIBE Coding Specification Tool</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
