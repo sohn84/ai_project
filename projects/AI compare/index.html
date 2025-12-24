@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hana Tour AI Product Comparison</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header animate-fade-in">
+            <div class="logo">HANA TOUR <span class="ai-badge">AI</span></div>
+            <h1>상품 비교 분석</h1>
+            <p>AI가 분석한 최적의 여행 상품을 확인해보세요.</p>
+        </header>
+
+        <!-- Persona Selection -->
+        <section class="persona-section animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="section-title">누구와 함께하시나요?</div>
+            <div class="persona-chips">
+                <button class="chip active" data-persona="family">아이 동반</button>
+                <button class="chip" data-persona="parents">부모님 효도</button>
+                <button class="chip" data-persona="couple">커플/친구</button>
+                <button class="chip" data-persona="value">가성비 중시</button>
+            </div>
+        </section>
+
+        <!-- AI Briefing Card -->
+        <section class="briefing-section animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="glass briefing-card">
+                <div class="card-header">
+                    <span class="sparkle-icon">✨</span>
+                    <h2>AI 맞춤 브리핑</h2>
+                </div>
+                <div id="ai-summary" class="briefing-content">
+                    <p class="highlight">"아이와 함께라면 <strong>A 상품</strong>의 수영장 시설과 여유로운 일정을 가장 추천드려요."</p>
+                    <ul class="briefing-list">
+                        <li><span class="bullet">·</span> A 상품은 호텔 내 키즈 클럽이 잘 갖춰져 있어 부모님도 휴식이 가능합니다.</li>
+                        <li><span class="bullet">·</span> B 상품은 이동 시간이 짧아 아이들의 피로도가 낮습니다.</li>
+                        <li><span class="bullet">·</span> C 상품은 체험 활동이 많아 초등학생 자녀에게 적합합니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Matrix -->
+        <section class="matrix-section animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="matrix-header-sticky glass">
+                <div class="matrix-row products">
+                    <div class="label">상품명</div>
+                    <div class="product-col">
+                        <div class="name">다낭 5일 [A]</div>
+                        <div class="price">1,290,000원</div>
+                    </div>
+                    <div class="product-col">
+                        <div class="name">다낭 5일 [B]</div>
+                        <div class="price">1,090,000원</div>
+                    </div>
+                    <div class="product-col">
+                        <div class="name">다낭 5일 [C]</div>
+                        <div class="price">890,000원</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="matrix-body">
+                <!-- Feature Rows -->
+                <div class="matrix-row">
+                    <div class="label">호텔 등급</div>
+                    <div class="val">5성급 (키즈풀)</div>
+                    <div class="val">4성급 (시내)</div>
+                    <div class="val">4성급 (가성비)</div>
+                </div>
+                <div class="matrix-row">
+                    <div class="label">식사 횟수</div>
+                    <div class="val">전일정 포함</div>
+                    <div class="val">특식 3회</div>
+                    <div class="val">특식 1회</div>
+                </div>
+                <div class="matrix-row">
+                    <div class="label">자유 시간</div>
+                    <div class="val">매일 오후</div>
+                    <div class="val">1일 전일</div>
+                    <div class="val">없음</div>
+                </div>
+                <div class="matrix-row">
+                    <div class="label">쇼핑 횟수</div>
+                    <div class="val">0회</div>
+                    <div class="val">2회</div>
+                    <div class="val">3회</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Chat Section -->
+        <section class="chat-section animate-fade-in" style="animation-delay: 0.5s;">
+            <div class="section-title">AI 컨시어지에게 물어보세요</div>
+            <div class="chat-container glass">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message ai">
+                        안녕하세요! 비교 중인 상품에 대해 궁금한 점이나, 다른 추천 상품이 필요하시면 말씀해 주세요.
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <div class="quick-chips">
+                        <button class="q-chip">온천 포함 상품 있어?</button>
+                        <button class="q-chip">가장 여유로운 일정은?</button>
+                        <button class="q-chip">호텔 등급 더 높은 거 보여줘</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="chat-input" placeholder="질문을 입력하세요...">
+                        <button id="send-btn">전송</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Swap Selection Modal (Hidden by default) -->
+        <div id="swap-modal" class="modal-overlay">
+            <div class="modal-content glass">
+                <h3>교체할 상품 선택</h3>
+                <p>새로운 상품을 어느 위치에 비교할까요?</p>
+                <div class="swap-options">
+                    <button class="swap-opt" data-index="0">상품 A 교체</button>
+                    <button class="swap-opt" data-index="1">상품 B 교체</button>
+                    <button class="swap-opt" data-index="2">상품 C 교체</button>
+                </div>
+                <button class="close-modal">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
