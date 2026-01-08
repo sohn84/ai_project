@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4컷 만화 어드민 - 4cut Review Manga</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <!-- 1단: 헤더 -->
+    <header class="header">
+      <h1 class="header__title">4컷 만화 어드민</h1>
+      <button class="button button--secondary" id="resetBtn">
+        🔄 초기화
+      </button>
+    </header>
+
+    <!-- 2단: 4단계 패널 -->
+    <main>
+      <!-- 1단계: 콘티 시스템 프롬프트 -->
+      <section class="panel">
+        <div class="panel__header">
+          <span class="panel__emoji">📝</span>
+          <h2 class="panel__title">1단계: 콘티 시스템 프롬프트</h2>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="systemPrompt">
+            시스템 프롬프트 (콘티 생성 방식 제어)
+          </label>
+          <textarea class="textarea textarea--large" id="systemPrompt"
+            placeholder="시스템 프롬프트를 입력하세요...">[역할 부여]
+당신은 여행 후기에서 가장 행복하고 아름다웠던 순간만을 모아 따뜻한 네컷 만화로 재구성하는 전문 콘티 작가입니다.
+
+[입력 데이터 전처리 및 분석 지침]
+(중요!) 제공된 텍스트를 분석할 때 다음 삭제 규칙을 엄격히 적용하여 내용을 필터링하세요.
+
+1. 가이드 내용 삭제: 가이드의 이름, 칭찬, 역할 등 가이드와 관련된 모든 언급을 제외하세요. 오직 여행자의 시선에만 집중합니다.
+2. 불만 내용 삭제: 음식이 맛없었다, 쇼가 지루했다, 대기 시간이 길었다 등의 부정적인 피드백이나 불만 사항은 모두 삭제하세요.
+3. 정보성 내용 생략: 환전, 로밍, 날씨 정보 등 건조한 정보는 만화의 재미를 위해 생략합니다.
+4. 핵심 추출: 위 내용을 제외하고 남은 '즐거웠던 경험', '맛있었던 음식', '아름다웠던 풍경', '감동적인 순간'만을 추출하여 소재로 사용합니다.
+
+[시나리오 구성 요청 (기-승-전-결)]
+필터링된 긍정적인 내용들을 바탕으로, AI가 스스로 판단하여 가장 자연스러운 흐름으로 4컷을 배치하세요.
+
+1. 1컷 (기 - 설렘/도입): 여행의 시작, 첫인상, 또는 전반적인 기대감. (입력된 내용 중 도입부에 해당하는 즐거운 에피소드 선택)
+2. 2컷 (승 - 즐거움/체험): 구체적인 여행 경험 1. (예: 맛있게 먹은 음식, 재미있는 체험 등 긍정적 에피소드 배치)
+3. 3컷 (전 - 절정/감동): 여행의 하이라이트. (예: 가장 아름다웠던 풍경, 잊지 못할 순간 등 시각적으로 가장 훌륭한 내용 배치)
+4. 4컷 (결 - 만족/마무리): 여행의 총평. (전체적인 만족감, 추천 메시지, 또는 여행을 마치는 훈훈한 감정)
+
+[스타일 가이드]
+- 그림체: 펜으로 쓱쓱 그린 듯한 단순하고 소박한 선화. 여백을 살린 편안한 구도.
+- 색상: 흑백 드로잉을 기본으로 하되, 행복한 감정이나 맛있는 음식 등 강조할 부분에만 따뜻한 '파스텔 톤(노랑, 분홍)'을 포인트 컬러로 사용.
+- 분위기: 힐링, 소확행(소소하지만 확실한 행복), 잔잔한 미소.
+
+[출력 형식]
+반드시 아래 JSON 구조로만 출력하세요. 다른 텍스트 설명 없이 오직 JSON만 반환하세요.
+
+{
+  "만화 제목": "(내용을 아우르는 감성적인 제목)",
+  "컷 구성": [
+    {
+      "1컷": {
+        "장소": "(장소명)",
+        "그림묘사": "(캐릭터 표정, 배경, 포인트 컬러 사용 위치 등을 영문으로 구체적이고 상세하게 작성)",
+        "대사/내레이션": "(부정적인 말 없이 행복한 대사 위주로, 한국어)"
+      }
+    },
+    {
+      "2컷": {
+        "장소": "(장소명)",
+        "그림묘사": "(캐릭터 표정, 배경, 포인트 컬러 사용 위치 등을 영문으로 구체적이고 상세하게 작성)",
+        "대사/내레이션": "(부정적인 말 없이 행복한 대사 위주로, 한국어)"
+      }
+    },
+    {
+      "3컷": {
+        "장소": "(장소명)",
+        "그림묘사": "(캐릭터 표정, 배경, 포인트 컬러 사용 위치 등을 영문으로 구체적이고 상세하게 작성)",
+        "대사/내레이션": "(부정적인 말 없이 행복한 대사 위주로, 한국어)"
+      }
+    },
+    {
+      "4컷": {
+        "장소": "(장소명)",
+        "그림묘사": "(캐릭터 표정, 배경, 포인트 컬러 사용 위치 등을 영문으로 구체적이고 상세하게 작성)",
+        "대사/내레이션": "(부정적인 말 없이 행복한 대사 위주로, 한국어)"
+      }
+    }
+  ]
+}
+
+주의사항:
+- 그림묘사는 이미지 생성 AI가 이해할 수 있도록 반드시 영어로 상세하게 작성하세요.
+- 대사/내레이션은 만화에 들어갈 한국어로 작성하세요.
+- 스타일 가이드를 반드시 준수하세요 (펜 선화, 흑백 베이스, 파스텔 포인트 컬러).</textarea>
+        </div>
+      </section>
+
+      <!-- 2단계: 리뷰 입력 -->
+      <section class="panel">
+        <div class="panel__header">
+          <span class="panel__emoji">✍️</span>
+          <h2 class="panel__title">2단계: 리뷰 입력</h2>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="reviewText">
+            여행 리뷰 (500자 이내)
+          </label>
+          <textarea class="textarea textarea--large" id="reviewText"
+            placeholder="예: 하나투어 패키지로 제주도 3박 4일 다녀왔습니다. 성산일출봉에서 본 일출이 정말 장관이었고, 흑돼지 맛집에서 먹은 고기도 일품이었어요. 특히 우도에서 자전거 타며 돌아본 풍경이 인상 깊었습니다. 다음에 또 가고 싶어요!"
+            maxlength="500"></textarea>
+        </div>
+        <div class="button-group">
+          <button class="button button--primary" id="generateContiBtn">
+            📝 콘티 생성
+          </button>
+        </div>
+      </section>
+
+      <!-- 3단계: 콘티 확인 -->
+      <section class="panel">
+        <div class="panel__header">
+          <span class="panel__emoji">📋</span>
+          <h2 class="panel__title">3단계: 콘티 확인</h2>
+        </div>
+        <div class="result-area result-area--empty" id="contiResult">
+          <p>콘티가 생성되면 여기에 표시됩니다.</p>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="contiJson">
+            콘티 JSON (수정 가능)
+          </label>
+          <textarea class="textarea textarea--large textarea--code" id="contiJson"
+            placeholder='콘티 생성 후 JSON이 표시됩니다.'></textarea>
+        </div>
+        <div class="button-group">
+          <button class="button button--primary" id="generateMangaBtn" disabled>
+            🎨 4컷 만화 생성
+          </button>
+        </div>
+      </section>
+
+      <!-- 4단계: 4컷 만화 결과 -->
+      <section class="panel">
+        <div class="panel__header">
+          <span class="panel__emoji">🎨</span>
+          <h2 class="panel__title">4단계: 4컷 만화 결과</h2>
+        </div>
+        <div class="result-area" id="mangaResult">
+          <p class="result-area--empty">4컷 만화가 생성되면 여기에 표시됩니다.</p>
+        </div>
+        <div class="button-group">
+          <button class="button button--primary" id="downloadBtn" disabled>
+            💾 다운로드
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const resetBtn = document.getElementById('resetBtn');
+    const generateContiBtn = document.getElementById('generateContiBtn');
+    const generateMangaBtn = document.getElementById('generateMangaBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const contiResult = document.getElementById('contiResult');
+    const contiJson = document.getElementById('contiJson');
+
+    resetBtn.addEventListener('click', () => {
+      if (confirm('모든 내용을 초기화하시겠습니까?')) {
+        document.getElementById('systemPrompt').value = document.getElementById('systemPrompt').defaultValue;
+        document.getElementById('reviewText').value = '';
+        contiJson.value = '';
+        contiResult.innerHTML = '<p>콘티가 생성되면 여기에 표시됩니다.</p>';
+        contiResult.classList.add('result-area--empty');
+        generateMangaBtn.disabled = true;
+        downloadBtn.disabled = true;
+        const mangaResult = document.getElementById('mangaResult');
+        mangaResult.innerHTML = '<p class="result-area--empty">4컷 만화가 생성되면 여기에 표시됩니다.</p>';
+      }
+    });
+
+    generateContiBtn.addEventListener('click', async () => {
+      const systemPrompt = document.getElementById('systemPrompt').value;
+      const reviewText = document.getElementById('reviewText').value;
+      if (!reviewText) {
+        alert('리뷰를 입력해주세요.');
+        return;
+      }
+      contiResult.classList.remove('result-area--empty');
+      contiResult.innerHTML = '<div class="loading-text"><span class="loading"></span> Gemini로 콘티 생성 중...</div>';
+      generateContiBtn.disabled = true;
+      try {
+        const conti = await generateContiWithGemini(systemPrompt, reviewText);
+        contiJson.value = JSON.stringify(conti, null, 2);
+        contiResult.innerHTML = '<p style="color: var(--accent-blue);">✅ 콘티 생성 완료! 아래에서 확인하고 수정할 수 있습니다.</p>';
+        generateMangaBtn.disabled = false;
+      } catch (error) {
+        contiResult.innerHTML = `<p style="color: #ef4444;">❌ 콘티 생성 실패: ${error.message}</p>`;
+        console.error('콘티 생성 에러:', error);
+      } finally {
+        generateContiBtn.disabled = false;
+      }
+    });
+
+    let currentMangaImage = null;
+    generateMangaBtn.addEventListener('click', async () => {
+      const contiText = contiJson.value;
+      const systemPrompt = document.getElementById('systemPrompt').value;
+
+      if (!contiText || contiText.trim() === '') {
+        alert('콘티 텍스트가 비어있습니다. 먼저 콘티를 생성해주세요.');
+        return;
+      }
+      const mangaResult = document.getElementById('mangaResult');
+      mangaResult.innerHTML = '<div class="loading-text"><span class="loading"></span> Gemini로 4컷 만화 생성 중... (최대 1분 소요)</div>';
+      generateMangaBtn.disabled = true;
+      try {
+        const imageDataUrl = await generateMangaImageWithGemini(contiText, systemPrompt);
+        currentMangaImage = imageDataUrl;
+        mangaResult.innerHTML = `
+          <img src="${imageDataUrl}" alt="4컷 만화" style="max-width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" />
+          <p style="margin-top: var(--spacing-md); color: var(--accent-blue); font-size: 0.875rem;">✅ 4컷 만화 생성 완료!</p>
+        `;
+        downloadBtn.disabled = false;
+      } catch (error) {
+        mangaResult.innerHTML = `<p style="color: #ef4444;">❌ 이미지 생성 실패: ${error.message}</p>`;
+        console.error('이미지 생성 에러:', error);
+      } finally {
+        generateMangaBtn.disabled = false;
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (currentMangaImage) {
+        const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        downloadImage(currentMangaImage, `4cut-manga-${timestamp}.png`);
+      } else {
+        alert('다운로드할 이미지가 없습니다.');
+      }
+    });
+  </script>
+</body>
+
+</html>

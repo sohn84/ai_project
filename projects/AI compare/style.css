@@ -442,3 +442,382 @@ body {
     font-size: 14px;
     cursor: pointer;
 }
+
+/* ===== Card Component System ===== */
+/* 재사용 가능한 Card 컴포넌트 */
+
+/* Base Card */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: var(--glass-border);
+    box-shadow: var(--shadow-premium);
+}
+
+/* Card with Glass Effect */
+.card--glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Card with Gradient Border */
+.card--gradient {
+    position: relative;
+    background: var(--card-bg);
+    border: none;
+}
+
+.card--gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    padding: 1px;
+    background: var(--accent-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* Card Variants */
+.card--primary {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border-color: var(--accent-blue);
+}
+
+.card--secondary {
+    background: var(--secondary-bg);
+}
+
+.card--interactive {
+    cursor: pointer;
+}
+
+.card--interactive:active {
+    transform: scale(0.98);
+}
+
+/* Card Header */
+.card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-sm);
+}
+
+.card__header--center {
+    justify-content: center;
+}
+
+.card__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.card__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.card__title--small {
+    font-size: 16px;
+}
+
+.card__subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 0 0;
+}
+
+/* Card Body */
+.card__body {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.card__body--compact {
+    margin: 0;
+}
+
+/* Card Footer */
+.card__footer {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card__footer--center {
+    justify-content: center;
+}
+
+/* Card Badge */
+.card__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.card__badge--primary {
+    background: var(--accent-gradient);
+    color: white;
+}
+
+.card__badge--secondary {
+    background: var(--secondary-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.card__badge--success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.card__badge--warning {
+    background: rgba(251, 146, 60, 0.1);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+/* Card List */
+.card__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.card__list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.card__list-item:last-child {
+    margin-bottom: 0;
+}
+
+.card__list-bullet {
+    color: var(--accent-purple);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Card Actions */
+.card__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.card__button {
+    flex: 1;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card__button:hover {
+    background: var(--accent-purple);
+    transform: translateY(-1px);
+}
+
+.card__button--outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.card__button--outline:hover {
+    border-color: var(--accent-blue);
+    background: rgba(79, 70, 229, 0.1);
+}
+
+/* Card Grid System */
+.card-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.card-grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Responsive Grid */
+@media (max-width: 480px) {
+    .card-grid--2,
+    .card-grid--3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Product Card (특화 컴포넌트) */
+.product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+}
+
+.product-card__image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+    object-fit: cover;
+}
+
+.product-card__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.product-card__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: var(--spacing-sm);
+}
+
+.product-card__features {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* AI Insight Card (특화 컴포넌트) */
+.insight-card {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+    border: 1px solid var(--accent-purple);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.insight-card::before {
+    content: '✨';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    opacity: 0.3;
+}
+
+.insight-card__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-purple);
+    margin-bottom: var(--spacing-sm);
+}
+
+.insight-card__content {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Stat Card (통계 카드) */
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.stat-card__value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.stat-card__value--gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-card__label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Utility Classes */
+.card--compact {
+    padding: var(--spacing-md);
+}
+
+.card--spacious {
+    padding: var(--spacing-xl);
+}
+
+.card--no-border {
+    border: none;
+}
+
+.card--shadow {
+    box-shadow: var(--shadow-premium);
+}
