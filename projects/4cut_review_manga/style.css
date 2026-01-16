@@ -245,6 +245,83 @@ body {
   font-size: 0.875rem;
 }
 
+/* 라디오 버튼 그룹 */
+.radio-group {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--secondary-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 200px;
+}
+
+.radio-label:hover {
+  border-color: var(--accent-blue);
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.radio-label:has(input:checked) {
+  border-color: var(--accent-blue);
+  background: rgba(79, 70, 229, 0.15);
+}
+
+.radio-label input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.radio-label:has(input:checked) .radio-custom {
+  border-color: var(--accent-blue);
+}
+
+.radio-label:has(input:checked) .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: var(--accent-gradient);
+  border-radius: 50%;
+}
+
+.radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.radio-text strong {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+}
+
+.radio-text small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 /* 숨김 클래스 */
 .hidden {
   display: none !important;
