@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H-AI 하이</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header__back {
+      font-size: 20px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+
+    .header__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .header__help {
+      margin-left: 8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      color: #666;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* 배너 */
+    .banner {
+      background: #bfedd1;
+      border-radius: 20px;
+      padding: 24px;
+      margin: 20px;
+    }
+
+    .banner__title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .banner__subtitle {
+      font-size: 16px;
+      color: #555;
+    }
+
+    /* 채팅 영역 */
+    .chat-area {
+      padding: 20px;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .chat-header__icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+
+    .chat-header__name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* 메시지 버블 */
+    .message-bubble {
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+      color: #333;
+      font-size: 15px;
+    }
+
+    .message-bubble p {
+      margin-bottom: 16px;
+    }
+
+    .message-bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .message-bubble .highlight {
+      font-weight: 700;
+    }
+
+    .message-bubble .emoji {
+      font-style: normal;
+    }
+
+    /* 음성안내 버튼 */
+    .voice-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 14px;
+      color: #666;
+      cursor: pointer;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .voice-button:hover {
+      background: #f5f5f5;
+    }
+
+    /* 퀵 메뉴 */
+    .quick-menu {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+    }
+
+    .quick-menu__item {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-menu__item:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .quick-menu__icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .quick-menu__text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .quick-menu__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .quick-menu__desc {
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* 입력 영역 */
+    .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 20px;
+      background: #fff;
+      border-top: 1px solid #eee;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-field {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: #667eea;
+    }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* 하단 여백 (입력창 높이만큼) */
+    .bottom-spacer {
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 헤더 -->
+    <header class="header">
+      <span class="header__back">&larr;</span>
+      <h1 class="header__title">H-AI 하이</h1>
+      <span class="header__help">?</span>
+    </header>
+
+    <!-- 배너 -->
+    <div class="banner">
+      <h2 class="banner__title">H-AI와 함께한 10만 번의 특별한 순간</h2>
+      <p class="banner__subtitle">여러분과 함께한 H-AI의 발자취를 함께 돌아볼까요?</p>
+    </div>
+
+    <!-- 채팅 영역 -->
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-header__icon">🤖</div>
+        <span class="chat-header__name">H-AI</span>
+      </div>
+
+      <div class="message-bubble">
+        <p>안녕하세요. <span class="highlight">H-AI(하이)</span>입니다.</p>
+        <p>지금 <span class="emoji">👆</span> 퀴즈쇼에 참여하고 혜택 받아가세요!</p>
+        <p><span class="emoji">🎙️</span> Live 대화로 여행을 말로 편하게 상담하고, 원하는 여행을 바로 만들어보세요.<br>
+        그리고 매일 <span class="emoji">🔮</span> 오늘의 운세와 <span class="emoji">🎨</span> AI 여행 한 컷을 무료로 즐겨보세요.</p>
+        <p>어떤 여행을 꿈꾸시나요?<br>
+        여행 및 상담, 상품 추천, 일정 만들기 등<br>
+        언제나 여행 파트너 H-AI가 도와드리겠습니다.</p>
+      </div>
+
+      <!-- 음성안내 버튼 -->
+      <button class="voice-button">
+        <span>🔊</span>
+        <span>음성안내</span>
+      </button>
+
+      <!-- 퀵 메뉴 -->
+      <div class="quick-menu">
+        <div class="quick-menu__item">
+          <div class="quick-menu__icon">🎯</div>
+          <div class="quick-menu__text">
+            <span class="quick-menu__title">퀴즈쇼 풀고</span>
+            <span class="quick-menu__desc">마일리지 받기</span>
+          </div>
+        </div>
+        <div class="quick-menu__item">
+          <div class="quick-menu__icon">🔮</div>
+          <div class="quick-menu__text">
+            <span class="quick-menu__title">오늘의</span>
+            <span class="quick-menu__desc">운세</span>
+          </div>
+        </div>
+        <div class="quick-menu__item">
+          <div class="quick-menu__icon">🗽</div>
+          <div class="quick-menu__text">
+            <span class="quick-menu__title">AI 여행</span>
+            <span class="quick-menu__desc">만들기</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+
+    <!-- 입력 영역 -->
+    <div class="input-area">
+      <div class="input-wrapper">
+        <input type="text" class="input-field" placeholder="메시지를 입력하세요...">
+        <button class="send-btn">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 간단한 인터랙션
+    document.querySelector('.send-btn').addEventListener('click', () => {
+      const input = document.querySelector('.input-field');
+      if (input.value.trim()) {
+        alert('메시지: ' + input.value);
+        input.value = '';
+      }
+    });
+
+    document.querySelector('.input-field').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.querySelector('.send-btn').click();
+      }
+    });
+
+    // 퀵 메뉴 클릭
+    document.querySelectorAll('.quick-menu__item').forEach(item => {
+      item.addEventListener('click', () => {
+        const title = item.querySelector('.quick-menu__title').textContent;
+        alert(title + ' 기능 준비 중입니다.');
+      });
+    });
+
+    // 음성안내 버튼
+    document.querySelector('.voice-button').addEventListener('click', () => {
+      alert('음성안내 기능 준비 중입니다.');
+    });
+  </script>
+</body>
+</html>
