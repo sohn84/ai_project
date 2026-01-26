@@ -82,7 +82,32 @@
 - 순수 웹 기술만 사용
 - 정적 웹 애플리케이션
 
+### 5. AI Comparison (AI 비교하기)
+
+#### Frontend
+- **React 18** - UI 라이브러리
+- **Vite** - 빌드 도구 (Next.js 대신 사용)
+- **TypeScript** - 타입 안전성
+- **Tailwind CSS 4** - 유틸리티 우선 CSS
+
+#### AI & APIs
+- **Gemini API (Vertex AI)** - Function Calling, Slot Filling
+- **Hanatour MCP** - 여행 상품 데이터 (항공, 호텔, 패키지)
+
+#### 디자인
+- **Figma Make** - AI 기반 프로토타입 생성
+
+#### 배포
+- **Vercel** - 정적 사이트 배포
+
 ## 개발 도구
+
+### 디자인 도구
+- **Figma** - UI/UX 디자인
+- **Figma Make** - AI 기반 프로토타입 자동 생성
+  - 프롬프트 기반 UI 생성
+  - React 코드 변환 지원
+  - MCP 연동으로 Claude와 직접 통신
 
 ### 코드 에디터
 - **VS Code** (권장)
@@ -152,6 +177,19 @@
 - 데이터베이스 API
 - 스토리지
 - 실시간 기능
+
+### Gemini API (Vertex AI)
+- Function Calling - 도구 호출
+- Slot Filling - 대화형 정보 수집
+- 시스템 프롬프트 기반 대화
+
+### MCP (Model Context Protocol)
+- **하나투어 MCP** - 여행 상품 검색 API
+  - 항공권, 호텔, 패키지 검색
+  - JSON-RPC 2.0 기반
+- **Figma MCP** - Figma 디자인 연동
+  - Claude와 Figma 직접 통신
+  - 디자인 토큰 추출
 
 ## 배포 & 호스팅
 
