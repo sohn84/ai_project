@@ -1,0 +1,40 @@
+:root {
+  --font-size: 16px;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --primary: #7B3FF2;
+  --primary-light: #E9E5FB;
+  --secondary: #F7F5FE;
+  --muted: #717182;
+  --border: rgba(0, 0, 0, 0.1);
+  --radius: 0.625rem;
+  --spacing-unit: 10px;
+}
+
+/* 테이블 셀 기본 여백 */
+td,
+th {
+  padding: var(--spacing-unit);
+}
+
+/* 버튼/Chip 기본 여백 */
+button {
+  padding: var(--spacing-unit);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 1;
+  padding: 5;
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+body {
+  font-family: Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--secondary);
+  color: var(--foreground);
+  line-height: 1.5;
+}
