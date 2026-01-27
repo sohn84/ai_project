@@ -3,6 +3,10 @@
     "figma": {
       "type": "http",
       "url": "http://127.0.0.1:3845/mcp"
+    },
+    "qaMcp": {
+      "type": "sse",
+      "url": "http://192.168.82.91:8000/sse"
     }
   }
 }
