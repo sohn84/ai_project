@@ -324,8 +324,8 @@ export function AIConcierge() {
   }, [messages]);
 
   return (
-    <section className="relative border-t border-gray-200 pt-[10px] bg-[radial-gradient(ellipse_46.67%_54.33%_at_50.00%_53.33%,_#EED6FF_0%,_#F7F5FE_100%)] flex flex-col h-[600px]">
-      <div ref={chatContainerRef} className="flex-1 overflow-y-auto max-w-5xl mx-auto w-full">
+    <section className="relative border-t border-gray-200 pt-[10px] bg-[radial-gradient(ellipse_46.67%_54.33%_at_50.00%_53.33%,_#EED6FF_0%,_#F7F5FE_100%)] flex flex-col min-h-[400px]">
+      <div ref={chatContainerRef} className="max-w-5xl mx-auto w-full pb-4">
         {messages.length === 0 && (
           <div className="flex items-center justify-center mb-[60px] text-center mt-[48px] mx-[0px] my-[48px]">
             <h2 className="text-2xl text-gray-900 flex flex-col items-center gap-3">

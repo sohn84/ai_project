@@ -27,7 +27,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F7F5FE]">
       {/* Header */}
-      <header className="" style={{ background: 'linear-gradient(182deg, #EED6FF -6.04%, #F7F5FE 63.91%)' }}>
+      <header className="sticky top-0 z-50" style={{ background: 'linear-gradient(182deg, #EED6FF -6.04%, #F7F5FE 63.91%)' }}>
         <div className="max-w-5xl mx-auto px-6 py-6 pt-[24px] pr-[24px] pb-[10px] pl-[24px]">
           <div className="flex items-center gap-3 mb-[5px] mt-[40px]">
             <div className="w-6 h-6 overflow-hidden">
