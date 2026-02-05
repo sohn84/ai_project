@@ -7,6 +7,10 @@
     "qaMcp": {
       "type": "sse",
       "url": "http://192.168.82.91:8000/sse"
+    },
+    "HNT_MCP" : {
+      "type": "https",
+      "url": "https://boilingly-nonimpressionable-earnest.ngrok-free.dev/mcp"
     }
   }
 }

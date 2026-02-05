@@ -51,9 +51,9 @@ export function AIBriefing({ tabType, selectedValue }: AIBriefingProps) {
         return {
           summary: '휴양과 힐링을 원한다면 여유로운 일정이 핵심입니다. 리조트 내에서 충분히 머물며 자연경관을 즐기고, 스파나 마사지 같은 힐링 프로그램이 포함되어 있으면 완벽합니다.',
           insights: [
-            { product: 'A', reason: '△ 디즈니랜드·동방명주·예원 등 관광 중심 일정으로 휴양보다는 액티비티에 가까움' },
+            { product: 'A', reason: '🤔 디즈니랜드·동방명주·예원 등 관광 중심 일정으로 휴양보다는 액티비티에 가까움' },
             { product: 'B', reason: '⭐⭐ 5성급 샹그릴라 비치 리조트에서 3박 연박, 프라이빗 비치와 스파 시설 완비, 아일랜드호핑 외 리조트 휴식 시간 충분' },
-            { product: 'C', reason: '△ 무앙보란·산호섬·아시아티크 등 관광 일정 과다, 휴양보다는 문화관광 성격이 강함' },
+            { product: 'C', reason: '🤔 무앙보란·산호섬·아시아티크 등 관광 일정 과다, 휴양보다는 문화관광 성격이 강함' },
           ]
         };
       } else if (selectedValue === 'activity') {

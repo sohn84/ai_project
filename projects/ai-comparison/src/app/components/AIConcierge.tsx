@@ -6,9 +6,9 @@ import { sendMessage, sendFunctionResult, isGeminiAvailable, ChatHistory } from 
 
 // 전체 추천 질문 풀
 const allSuggestedQuestions = [
-  '발리 패키지 상품 검색해줘',
-  '다낭 호텔 추천해줘',
-  '도쿄행 항공권 찾아줘',
+  '첫번째와 두번째 상품의 선택관광은 있어 ? ',
+  '비행시간은 어떤 상품이 가장 짧아 ?',
+  '자유시간이 가장 많은 상품은 뭐야 ? ',
   '가족여행 패키지 있어?',
   '오사카 3박4일 상품',
   '방콕 자유여행 패키지',
@@ -324,74 +324,64 @@ export function AIConcierge() {
   }, [messages]);
 
   return (
-    <section className="relative border-t border-gray-200 pt-[10px] bg-[radial-gradient(ellipse_46.67%_54.33%_at_50.00%_53.33%,_#EED6FF_0%,_#F7F5FE_100%)] flex flex-col min-h-[400px]">
-      <div ref={chatContainerRef} className="max-w-5xl mx-auto w-full pb-4">
-        {messages.length === 0 && (
-          <div className="flex items-center justify-center mb-[60px] text-center mt-[48px] mx-[0px] my-[48px]">
-            <h2 className="text-2xl text-gray-900 flex flex-col items-center gap-3">
-              <span className="w-[30px] h-[30px]">
-                <Reception />
-              </span>
-              <span className="text-[18px]">AI 컨시어지에게<br />무엇이든 물어보세요</span>
-            </h2>
-          </div>
-        )}
+    <>
+      <section className="relative border-t border-gray-200 pt-[10px] bg-[radial-gradient(ellipse_46.67%_54.33%_at_50.00%_53.33%,_#EED6FF_0%,_#F7F5FE_100%)] flex flex-col min-h-[400px] pb-[95px]">
+        <div ref={chatContainerRef} className="max-w-5xl mx-auto w-full pb-4">
+          {messages.length === 0 && (
+            <p className="text-sm text-gray-500 mb-[8px] mr-[24px] ml-[24px]">
+              더 비교하고 싶은 내용이 있으신가요 ? 대화로 물어보세요.
+              {!geminiEnabled && <span className="text-orange-500 ml-2">(AI 모드 비활성)</span>}
+            </p>
+          )}
 
-        {messages.length === 0 && (
-          <p className="text-sm text-gray-500 mb-[8px] mr-[24px] ml-[24px]">
-            여행지, 호텔, 항공권 등 원하는 상품을 검색해보세요
-            {!geminiEnabled && <span className="text-orange-500 ml-2">(AI 모드 비활성)</span>}
-          </p>
-        )}
-
-        {/* Messages Display */}
-        {messages.length > 0 && (
-          <div className="mb-[10px] space-y-4 bg-transparent rounded-xl">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
+          {/* Messages Display */}
+          {messages.length > 0 && (
+            <div className="mb-[10px] space-y-4 bg-transparent rounded-xl">
+              {messages.map((message, index) => (
                 <div
-                  className={`max-w-[80%] px-3 py-3 text-sm ml-[24px] whitespace-pre-wrap ${
-                    message.type === 'user'
+                  key={index}
+                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] px-3 py-3 text-sm ml-[24px] whitespace-pre-wrap ${message.type === 'user'
                       ? 'bg-[#7B3FF2] mr-[24px] text-white rounded-[1.5rem_1.5rem_0_1.5rem]'
                       : 'bg-white border border-gray-200 text-gray-900 rounded-[0_1.5rem_1.5rem_1.5rem]'
-                  }`}
-                >
-                  {message.text}
+                      }`}
+                  >
+                    {message.text}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isGenerating && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] px-3 py-3 text-sm ml-[24px] bg-white border border-gray-200 text-gray-900 rounded-[0_1.5rem_1.5rem_1.5rem]">
-                  <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
-                  {geminiEnabled ? 'AI가 응답을 생성하고 있습니다...' : '상품을 검색하고 있습니다...'}
+              ))}
+              {isGenerating && (
+                <div className="flex justify-start">
+                  <div className="max-w-[80%] px-3 py-3 text-sm ml-[24px] bg-white border border-gray-200 text-gray-900 rounded-[0_1.5rem_1.5rem_1.5rem]">
+                    <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
+                    {geminiEnabled ? 'AI가 응답을 생성하고 있습니다...' : '상품을 검색하고 있습니다...'}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
 
-        {/* Suggested Questions */}
-        {!isGenerating && (
-          <div className="flex flex-nowrap gap-3 mb-[60px] overflow-x-auto scrollbar-hide py-[2px] ml-[24px]">
-            {displayedQuestions.map((question, index) => (
-              <button
-                key={index}
-                onClick={() => handleQuestionClick(question)}
-                className="flex-shrink-0 px-[16px] py-[8px] border-1 border-white shadow-[0px_2px_3px_0px_rgba(0,0,0,0.10)] text-[#7B3FF2] rounded-full bg-white/50 hover:bg-white/80 text-sm"
-              >
-                {question}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+          {/* Suggested Questions */}
+          {!isGenerating && (
+            <div className="flex flex-nowrap gap-3 mb-[60px] overflow-x-auto scrollbar-hide py-[2px] ml-[24px]">
+              {displayedQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuestionClick(question)}
+                  className="flex-shrink-0 px-[16px] py-[8px] border-1 border-white shadow-[0px_2px_3px_0px_rgba(0,0,0,0.10)] text-[#7B3FF2] rounded-full bg-white/50 hover:bg-white/80 text-sm"
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Input Form - Fixed at bottom */}
-      <form onSubmit={handleSubmit} className={`flex-shrink-0 bg-[#F7F5FE] pt-4 pb-4 px-[24px] text-m border-t border-transparent flex items-center gap-3 ${messages.length > 0 ? 'shadow-[0_-2px_6px_rgba(0,0,0,0.06)]' : ''} max-w-5xl mx-auto w-full`}>
+      <form onSubmit={handleSubmit} className={`fixed bottom-0 left-0 right-0 bg-[#F7F5FE] pt-4 pb-4 px-[24px] text-m border-t border-gray-200 flex items-center gap-3 ${messages.length > 0 ? 'shadow-[0_-2px_6px_rgba(0,0,0,0.06)]' : ''} max-w-5xl mx-auto w-full z-10`}>
         <div className="flex flex-col items-center gap-1">
           <button
             type="button"
@@ -420,6 +410,6 @@ export function AIConcierge() {
           </button>
         </div>
       </form>
-    </section>
+    </>
   );
 }
