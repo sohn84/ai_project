@@ -11,6 +11,10 @@
     "HNT_MCP" : {
       "type": "https",
       "url": "https://boilingly-nonimpressionable-earnest.ngrok-free.dev/mcp"
+    },
+    "Amplitude": {
+      "url": "https://mcp.amplitude.com/mcp",
+      "transport": "streamable-http"
     }
   }
 }
