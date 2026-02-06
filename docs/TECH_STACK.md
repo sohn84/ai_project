@@ -100,6 +100,28 @@
 #### 배포
 - **Vercel** - 정적 사이트 배포
 
+### 6. H-AI Conversation Analysis (대화 로그 분석)
+
+#### Backend
+- **Python 3.8+** - 프로그래밍 언어
+- **Flask 3.0+** - 웹 프레임워크
+- **Werkzeug 3.0+** - WSGI 유틸리티
+
+#### 데이터 분석
+- **pandas 2.0+** - 데이터 처리 및 분석
+- **numpy 1.24+** - 수치 연산
+- **scikit-learn 1.3+** - 머신러닝 (클러스터링, TF-IDF)
+
+#### 파일 처리
+- **openpyxl 3.1+** - Excel 파일 읽기/쓰기
+
+#### 주요 기능
+- CSV/Excel 대화 로그 분석
+- 질문 유형 및 키워드 분석
+- 불만/부정 키워드 분석
+- 문맥 및 의도 클러스터링
+- HTML 보고서 생성
+
 ## 개발 도구
 
 ### 디자인 도구
@@ -124,6 +146,8 @@
 - **GitLens** - Git 기능 강화
 - **Auto Rename Tag** - HTML/JSX 태그 자동 이름 변경
 - **ES7+ React/Redux/React-Native snippets** - React 스니펫
+- **Python** - Python 언어 지원 (Python 프로젝트용)
+- **Pylance** - Python 타입 체킹 및 자동완성
 
 ### 브라우저 개발자 도구
 - **Chrome DevTools**
@@ -149,6 +173,11 @@
 - 기본 React state
 - **React Hook Form** (복잡한 폼 처리 시)
 - **Zod** - 스키마 검증 (필요 시)
+
+### 데이터 분석 (Python)
+- **pandas** - 데이터프레임 처리 및 분석
+- **numpy** - 수치 연산 및 배열 처리
+- **scikit-learn** - 머신러닝 알고리즘 (KMeans, TF-IDF 등)
 
 ## 데이터베이스
 
@@ -221,6 +250,16 @@
 
 ### TypeScript
 - **버전**: 5.x
+
+### Python
+- **권장**: 3.8 이상
+- **최소**: 3.8
+
+### Flask
+- **버전**: 3.0+
+
+### pandas
+- **버전**: 2.0+
 
 ## 향후 고려 기술
 

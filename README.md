@@ -40,6 +40,12 @@ ai_project/
 - **포트**: 3006
 - **주요 기능**: MCP 기반 실시간 항공/호텔/패키지 조회 및 비교
 
+### 6. [H-AI Conversation Analysis](./projects/H-AI_conversation_analysis/)
+- **설명**: 여행사 AI 챗봇 대화 로그 분석 도구
+- **기술**: Python, Flask, pandas, scikit-learn
+- **포트**: 4000
+- **주요 기능**: 질문 유형 분석, 불만/부정 키워드 분석, 문맥/의도 분석, 개선 권고 생성
+
 ## 시작하기
 
 각 프로젝트는 독립적으로 실행됩니다. 원하는 프로젝트 디렉토리로 이동하여 해당 README를 참고하세요.

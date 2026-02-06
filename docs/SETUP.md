@@ -14,7 +14,18 @@ node --version
 npm --version
 ```
 
-### 2. Git 설치
+### 2. Python 설치 (Python 프로젝트용)
+- **권장 버전**: Python 3.8 이상
+- **다운로드**: [Python 공식 사이트](https://www.python.org/)
+
+설치 확인:
+```bash
+python --version
+# 또는
+python3 --version
+```
+
+### 3. Git 설치
 - **다운로드**: [Git 공식 사이트](https://git-scm.com/)
 
 설치 확인:
@@ -115,6 +126,55 @@ open index.html
 xdg-open index.html
 ```
 
+### Python 프로젝트 (H-AI Conversation Analysis)
+
+1. 프로젝트 디렉토리로 이동
+```bash
+cd projects/H-AI_conversation_analysis
+```
+
+2. 가상환경 생성
+```bash
+# Windows
+python -m venv venv
+
+# macOS/Linux
+python3 -m venv venv
+```
+
+3. 가상환경 활성화
+```bash
+# Windows (PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# Windows (CMD)
+venv\Scripts\activate.bat
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+4. 의존성 설치
+```bash
+pip install -r requirements.txt
+```
+
+5. Flask 앱 실행
+```bash
+python app.py
+```
+
+6. 브라우저에서 확인
+```
+http://localhost:4000
+```
+
+**참고**: 분석 스크립트만 실행하려면:
+```bash
+python run_analysis.py                    # 기본 CSV 사용
+python run_analysis.py /path/to/other.csv  # 다른 파일 지정
+```
+
 ## 에디터 설정
 
 ### VS Code (추천)
@@ -145,6 +205,7 @@ xdg-open index.html
 - Chat App: `3001`
 - AI Video Studio Admin: `3002`
 - BA Requirements Generator: `8000` (로컬 서버 사용 시)
+- H-AI Conversation Analysis: `4000`
 
 ## 문제 해결
 
@@ -172,6 +233,15 @@ npm install
 # Next.js 캐시 삭제
 rm -rf .next
 npm run dev
+```
+
+### Python 가상환경 문제
+```bash
+# 가상환경 재생성
+rm -rf venv
+python -m venv venv
+# 가상환경 활성화 후
+pip install -r requirements.txt
 ```
 
 ## 추가 도구
