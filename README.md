@@ -46,6 +46,12 @@ ai_project/
 - **포트**: 4000
 - **주요 기능**: 질문 유형 분석, 불만/부정 키워드 분석, 문맥/의도 분석, 개선 권고 생성
 
+### 7. [Agentic Commerce](./projects/agentic_commerce/)
+- **설명**: Figma Make로 생성된 여행 상품 쇼핑몰 프로젝트
+- **기술**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Material-UI
+- **포트**: 3004 (충돌 시 3005)
+- **주요 기능**: 항공권/호텔/패키지 상품 표시, 예약 및 결제 플로우, 반응형 UI
+
 ## 시작하기
 
 각 프로젝트는 독립적으로 실행됩니다. 원하는 프로젝트 디렉토리로 이동하여 해당 README를 참고하세요.

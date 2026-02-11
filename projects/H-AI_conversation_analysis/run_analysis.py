@@ -47,7 +47,7 @@ def run_from_df(df: pd.DataFrame) -> dict:
     negative_analysis = analyze_negative(df)
     context_intent = run_context_and_intent_analysis(df)
     conversation_review = run_conversation_review_analysis(df)
-    recommendations = build_recommendations(question_types, negative_analysis)
+    recommendations = build_recommendations(question_types, negative_analysis, context_intent)
     report = {
         "질문_유형_분석": question_types,
         "불만_부정_분석": negative_analysis,
@@ -81,7 +81,7 @@ def run(csv_path: str | Path | None = None) -> dict:
     conversation_review = run_conversation_review_analysis(df)
 
     print("5) RAG·프롬프트·피드백 루프 권고 생성...")
-    recommendations = build_recommendations(question_types, negative_analysis)
+    recommendations = build_recommendations(question_types, negative_analysis, context_intent)
 
     report = {
         "질문_유형_분석": question_types,

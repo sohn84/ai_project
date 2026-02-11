@@ -19,6 +19,7 @@ from typing import Any
 def build_recommendations(
     question_types: dict[str, Any],
     negative_analysis: dict[str, Any],
+    context_intent: dict[str, Any] = None,
 ) -> dict[str, Any]:
     """
     분석 결과를 바탕으로 RAG/프롬프트/피드백 루프 **요약**만 구조화.
@@ -58,7 +59,65 @@ def build_recommendations(
         "항목": "오답 로그 수집·유형 태깅",
         "설명": "평가결과=오답, 오답사유, 질문/답변을 주기 수집 후 본 파이프라인에 투입. 오답사유를 유형별 태그로 정리해 RAG/프롬프트 우선순위에 반영.",
     })
+    
+    # 답변-질문 맥락 분석 기반 권고 추가
+    if context_intent:
+        aq_context = context_intent.get("답변_질문_맥락_분석") or {}
+        chatbot_eval = aq_context.get("챗봇_맥락_활용_평가") or {}
+        
+        # 맥락 활용 답변 품질
+        context_quality = chatbot_eval.get("맥락_활용_답변_품질") or {}
+        if context_quality.get("분석_가능"):
+            accuracy_diff = context_quality.get("정답률_차이", 0)
+            if accuracy_diff < -5:  # 맥락 의존 질문 정답률이 5% 이상 낮음
+                rec["rag_강화"].append({
+                    "항목": "멀티턴 맥락 포함",
+                    "설명": f"맥락 의존 질문 정답률({context_quality.get('맥락_의존_정답률', 0)}%)이 일반 질문({context_quality.get('일반_질문_정답률', 0)}%)보다 {abs(accuracy_diff):.1f}%p 낮음. RAG 검색 시 이전 1~2턴의 질문-답변을 컨텍스트로 포함 필요.",
+                })
+                rec["프롬프트_튜닝"].append({
+                    "항목": "이전 대화 맥락 명시",
+                    "설명": "프롬프트에 '이전 대화' 섹션 추가하여 세션 맥락 제공",
+                })
+        
+        # 맥락 누락 오답
+        context_miss = chatbot_eval.get("맥락_누락_오답") or {}
+        if context_miss.get("분석_가능"):
+            miss_rate = context_miss.get("맥락_누락_오답_비율", 0)
+            if miss_rate > 20:
+                rec["프롬프트_튜닝"].append({
+                    "항목": "참조 표현 처리",
+                    "우선순위": "높음",
+                    "설명": f"맥락 누락 오답 {context_miss.get('맥락_누락_오답_건수', 0):,}건 ({miss_rate}%). '그거', '아까' 등 참조 표현이 있는 질문에 대해 이전 대화를 프롬프트에 포함하도록 개선.",
+                })
+        
+        # 맥락 연결 성공률
+        chain_success = chatbot_eval.get("맥락_연결_성공률") or {}
+        if chain_success.get("분석_가능"):
+            success_rate = chain_success.get("맥락_연결_성공률", 0)
+            if success_rate < 60:
+                rec["프롬프트_튜닝"].append({
+                    "항목": "대화 흐름 이해",
+                    "설명": f"키워드 연결 성공률 {success_rate}%. 이전 답변의 키워드를 다음 질문이 참조할 때 정답률 향상 필요. 프롬프트에 '이전 답변과 연결하여' 지시 추가.",
+                })
+        
+        # 일관성
+        consistency = chatbot_eval.get("세션_내_일관성") or {}
+        if consistency.get("분석_가능"):
+            inconsistency = consistency.get("일관성_부족_세션", 0)
+            if inconsistency > 50:
+                rec["프롬프트_튜닝"].append({
+                    "항목": "세션 일관성 유지",
+                    "설명": f"일관성 부족 세션 {inconsistency:,}건. 같은 카테고리 질문에 정답↔오답 전환 발생. 세션 맥락을 유지하도록 프롬프트 개선.",
+                })
+    
     rec["우선순위_요약"].append("오답 원인별·카테고리별 샘플 5건과 오답사유 빈도 구문을 보고, 부족한 지식/답변 규칙을 특정한 뒤 RAG·프롬프트를 구체적으로 보강하세요.")
+    
+    # 맥락 분석 기반 우선순위 추가
+    if context_intent:
+        aq_context = context_intent.get("답변_질문_맥락_분석") or {}
+        if aq_context.get("답변_질문_맥락_분석_가능"):
+            rec["우선순위_요약"].append("멀티턴 대화: 맥락 의존 질문의 정답률이 낮다면 RAG 검색 시 이전 턴을 포함하고, 프롬프트에 세션 맥락을 명시하세요.")
+    
     rec["우선순위_요약"].append("구체적 개선안(RAG 문서 목록, 프롬프트 문구 등)은 분석 JSON 생성 후 LLM 종합 분석을 요청해 '개선_권고_상세'에 반영하는 것을 권장합니다.")
 
     return rec

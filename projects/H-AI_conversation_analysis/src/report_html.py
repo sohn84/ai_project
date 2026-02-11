@@ -313,6 +313,89 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
         html_parts.append("</tbody></table>")
     else:
         html_parts.append(f"<p>의도 클러스터: {intent_cl.get('이유', '해당 없음')}</p>")
+    
+    # 3-1. 답변-질문 맥락 분석 (이전 답변이 다음 질문에 미치는 영향)
+    aq_context = ctx_intent.get("답변_질문_맥락_분석") or {}
+    if aq_context.get("답변_질문_맥락_분석_가능"):
+        html_parts.append("<h3>답변-질문 맥락 분석 (이전 답변 → 다음 질문 영향)</h3>")
+        html_parts.append("<p>챗봇이 멀티턴 맥락을 얼마나 잘 활용하는지 평가합니다.</p>")
+        
+        # A. 고객 행동 패턴
+        customer_patterns = aq_context.get("고객_행동_패턴") or {}
+        html_parts.append("<h4>A. 고객 행동 패턴</h4>")
+        
+        # 답변 완결성
+        completeness = customer_patterns.get("답변_완결성") or {}
+        if completeness.get("분석_가능"):
+            html_parts.append("""<table><thead><tr><th>지표</th><th>건수</th><th>의미</th></tr></thead><tbody>""")
+            html_parts.append(f"<tr><td>오답 후 재질문</td><td>{completeness.get('오답_후_재질문_건수', 0):,}</td><td>오답 직후 재질문 키워드 출현</td></tr>")
+            html_parts.append(f"<tr><td>같은 카테고리 반복 세션</td><td>{completeness.get('같은_카테고리_반복_세션', 0):,}</td><td>불충분 답변으로 같은 주제 재질문</td></tr>")
+            html_parts.append(f"<tr><td>불충분 답변 후 재질문</td><td>{completeness.get('불충분_답변_후_재질문', 0):,}</td><td>사과/확인 답변 후 재질문</td></tr>")
+            html_parts.append("</tbody></table>")
+        
+        # 키워드 연관성
+        keyword_assoc = customer_patterns.get("키워드_연관성") or {}
+        if keyword_assoc.get("분석_가능"):
+            html_parts.append(f"<p><strong>키워드 연관성:</strong> 이전 답변 키워드가 다음 질문에 포함된 비율 <strong>{keyword_assoc.get('키워드_연관_비율', 0)}%</strong></p>")
+        
+        # 맥락 의존도
+        context_dep = customer_patterns.get("맥락_의존도") or {}
+        if context_dep.get("분석_가능"):
+            html_parts.append(f"<p><strong>맥락 의존도:</strong> 참조 표현 사용 <strong>{context_dep.get('참조_표현_비율', 0)}%</strong> ('그거', '아까' 등)</p>")
+        
+        # B. 챗봇 맥락 활용 평가 ⭐
+        chatbot_eval = aq_context.get("챗봇_맥락_활용_평가") or {}
+        html_parts.append("<h4>B. 챗봇 맥락 활용 평가 ⭐</h4>")
+        html_parts.append("<p>챗봇이 멀티턴 대화에서 이전 맥락을 얼마나 잘 이해하고 활용하는지 평가합니다.</p>")
+        
+        # 맥락 활용 답변 품질
+        context_quality = chatbot_eval.get("맥락_활용_답변_품질") or {}
+        if context_quality.get("분석_가능"):
+            html_parts.append("""<table><thead><tr><th>지표</th><th>값</th><th>의미</th></tr></thead><tbody>""")
+            html_parts.append(f"<tr><td>맥락 의존 질문 정답률</td><td><strong>{context_quality.get('맥락_의존_정답률', 0)}%</strong></td><td>vs 일반 질문 {context_quality.get('일반_질문_정답률', 0)}% (차이: {context_quality.get('정답률_차이', 0):+.1f}%)</td></tr>")
+            html_parts.append(f"<tr><td>맥락 의존 질문 수</td><td>{context_quality.get('맥락_의존_질문_수', 0):,}건</td><td>참조 표현이 있는 질문</td></tr>")
+            html_parts.append("</tbody></table>")
+        
+        # 맥락 누락 오답
+        context_miss = chatbot_eval.get("맥락_누락_오답") or {}
+        if context_miss.get("분석_가능"):
+            html_parts.append(f"<p><strong>맥락 누락 오답:</strong> {context_miss.get('맥락_누락_오답_건수', 0):,}건 ({context_miss.get('맥락_누락_오답_비율', 0)}%) - 참조 표현 질문에서 오답</p>")
+            for sample in context_miss.get("샘플", [])[:2]:
+                if isinstance(sample, dict):
+                    html_parts.append('<div class="sample-box">')
+                    html_parts.append(f"<strong>이전 답변:</strong> {sample.get('이전_답변', '')}…<br>")
+                    html_parts.append(f"<strong>참조 질문:</strong> {sample.get('참조_질문', '')}… → 오답")
+                    html_parts.append("</div>")
+        
+        # 맥락 연결 성공률
+        chain_success = chatbot_eval.get("맥락_연결_성공률") or {}
+        if chain_success.get("분석_가능"):
+            html_parts.append(f"<p><strong>맥락 연결 성공률:</strong> {chain_success.get('맥락_연결_성공률', 0)}% (키워드 연결 시 정답 비율)</p>")
+            html_parts.append(f"<p style='font-size:0.9em;color:#888;'>성공 {chain_success.get('맥락_연결_성공', 0):,}건 / 실패 {chain_success.get('맥락_연결_실패', 0):,}건</p>")
+        
+        # 일관성
+        consistency = chatbot_eval.get("세션_내_일관성") or {}
+        if consistency.get("분석_가능"):
+            html_parts.append(f"<p><strong>세션 내 일관성 부족:</strong> {consistency.get('일관성_부족_세션', 0):,} 세션 (같은 카테고리에 정답↔오답 전환)</p>")
+        
+        # 권고사항
+        html_parts.append('<div class="recommendation-box">')
+        html_parts.append("<strong>📌 개선 권고</strong><ul>")
+        
+        # 조건부 권고
+        if context_quality.get("정답률_차이", 0) < -5:
+            html_parts.append("<li>맥락 의존 질문 정답률이 일반 질문보다 낮음 → RAG 검색 시 이전 1~2턴 포함</li>")
+        
+        if context_miss.get("맥락_누락_오답_비율", 0) > 20:
+            html_parts.append(f"<li>맥락 누락 오답 {context_miss.get('맥락_누락_오답_건수', 0):,}건 → 프롬프트에 세션 맥락 명시</li>")
+        
+        if chain_success.get("맥락_연결_성공률", 0) < 60:
+            html_parts.append("<li>맥락 연결 성공률이 낮음 → 대화 흐름 이해 개선 필요</li>")
+        
+        if consistency.get("일관성_부족_세션", 0) > 50:
+            html_parts.append("<li>일관성 부족 세션 다수 → 세션 맥락 유지 강화</li>")
+        
+        html_parts.append("</ul></div>")
 
     # 4. 대화 리뷰 (Conversation Review + 고객 심리, 숨은 리스크)
     cr = report.get("대화_리뷰_분석") or {}

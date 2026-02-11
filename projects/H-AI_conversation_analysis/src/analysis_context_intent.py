@@ -3,12 +3,15 @@
 문맥·의도 기반 분석 (키워드 단순 집계 보완)
 - 세션 단위: 연속 턴, 오답 직후 불만 vs 첫 턴 불만
 - 질문 텍스트 기반 의도 클러스터링 (TF-IDF + KMeans)
+- 답변-질문 맥락 분석 (이전 답변이 다음 질문에 미치는 영향)
 """
 import re
 from collections import defaultdict
 from typing import Any
 
 import pandas as pd
+
+from .analysis_answer_question_context import analyze_answer_question_context
 
 # 의도 클러스터링용 (선택 의존성)
 try:
@@ -189,10 +192,13 @@ def analyze_intent_clusters(df: pd.DataFrame, n_clusters: int = 12, max_samples:
 
 
 def run_context_and_intent_analysis(df: pd.DataFrame) -> dict[str, Any]:
-    """문맥 분석 + 의도 클러스터링을 한 번에 실행."""
+    """문맥 분석 + 의도 클러스터링 + 답변-질문 맥락 분석을 한 번에 실행."""
     session_result = analyze_session_context(df)
     intent_result = analyze_intent_clusters(df)
+    answer_question_result = analyze_answer_question_context(df)
+    
     return {
         "세션_문맥_분석": session_result,
         "의도_클러스터링": intent_result,
+        "답변_질문_맥락_분석": answer_question_result,
     }
