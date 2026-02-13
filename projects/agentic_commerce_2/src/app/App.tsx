@@ -6,8 +6,11 @@ import { PackageDetail } from "./components/PackageDetail";
 import { PackageComparison } from "./components/PackageComparison";
 import { FITPackageCard, FITPackageData } from "./components/FITPackageCard";
 import { FITPackageDetail } from "./components/FITPackageDetail";
+import { FITComparison } from "./components/FITComparison";
 import { FlightCard, FlightData } from "./components/FlightCard";
+import { FlightComparison } from "./components/FlightComparison";
 import { HotelCard, HotelData } from "./components/HotelCard";
+import { HotelComparison } from "./components/HotelComparison";
 import { HotelDetail } from "./components/HotelDetail";
 import { FlightDetail } from "./components/FlightDetail";
 import { ActivityTicketSelector, ActivityTicket } from "./components/ActivityTicketSelector";
@@ -577,6 +580,16 @@ type Step =
   | "fit-activities"
   | "fit-summary";
 
+interface UserPersona {
+  companion: string;
+  hotelGrade: string;
+  destination: string;
+  month: string;
+  productType: "package" | "fit-combo" | "fit-flight" | "fit-hotel";
+  budget: string;
+  theme: string;
+}
+
 export default function App() {
   const [step, setStep] = useState<Step>("initial");
   const [messages, setMessages] = useState<Array<{ type: "user" | "bot"; content: React.ReactNode }>>([]);
@@ -612,11 +625,30 @@ export default function App() {
   const [showFlightDetail, setShowFlightDetail] = useState(false);
   const [showFitDetail, setShowFitDetail] = useState(false);
 
+  // FIT/항공/호텔 비교 관련 상태
+  const [comparisonFitPackages, setComparisonFitPackages] = useState<FITPackageData[]>([]);
+  const [showFitComparison, setShowFitComparison] = useState(false);
+  const [comparisonFlights, setComparisonFlights] = useState<FlightData[]>([]);
+  const [showFlightComparison, setShowFlightComparison] = useState(false);
+  const [comparisonHotels, setComparisonHotels] = useState<HotelData[]>([]);
+  const [showHotelComparison, setShowHotelComparison] = useState(false);
+
   // 룸타입 선택 관련 상태
   const [showRoomTypeSelector, setShowRoomTypeSelector] = useState(false);
   const [selectedRoomType, setSelectedRoomType] = useState<RoomType | null>(null);
   const [currentHotelForRoomSelection, setCurrentHotelForRoomSelection] = useState<string>("");
   const [extractedDestination, setExtractedDestination] = useState("");
+
+  // 사용자 페르소나 (개인화 추천용)
+  const [userPersona] = useState<UserPersona | null>({
+    companion: "아이 동반",
+    hotelGrade: "4성급",
+    destination: "도쿄",
+    month: "9월",
+    productType: "package",
+    budget: "100-200만원",
+    theme: "문화탐방",
+  });
 
 
   // 초기 메시지 표시
@@ -654,31 +686,65 @@ export default function App() {
     // 메시지 분석 및 응답
     setTimeout(() => {
       if (message.includes("여행") || message.includes("패키지") || message.includes("추천")) {
-        // 여행 타입 선택 메시지
-        setMessages(prev => [...prev, {
-          type: "bot",
-          content: (
-            <div>
-              <p className="text-[14px] text-[#111] leading-[1.5] mb-3">
-                자유여행을 선호하세요? 아니면 편한 패키지 상품을 추천해드릴까요?
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleTravelTypeSelect("fit")}
-                  className="flex-1 py-3 bg-[#7b3ff2] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#6930d9] transition-colors"
-                >
-                  자유여행
-                </button>
-                <button
-                  onClick={() => handleTravelTypeSelect("package")}
-                  className="flex-1 py-3 bg-[#3780ff] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#2563eb] transition-colors"
-                >
-                  패키지 상품
-                </button>
+        if (userPersona) {
+          // 페르소나 기반 개인화 메시지
+          const productTypeLabel = userPersona.productType === "package" ? "패키지 여행" : "자유여행";
+          const personaMessage = `${userPersona.companion}과 가기 좋은 ${userPersona.hotelGrade} 호텔의 ${userPersona.destination} ${userPersona.month} ${productTypeLabel} 찾고 계시죠?`;
+
+          setMessages(prev => [...prev, {
+            type: "bot",
+            content: (
+              <div>
+                <p className="text-[14px] text-[#111] leading-[1.5] mb-1">
+                  {personaMessage}
+                </p>
+                <p className="text-[14px] text-[#111] leading-[1.5] mb-3">
+                  아니면 새로운 여행지와 테마로 검색하시겠어요?
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePersonaSearch}
+                    className="flex-1 py-3 bg-gradient-to-r from-[#6976ff] to-[#7b3ff2] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:opacity-90 transition-opacity"
+                  >
+                    추천 검색하기
+                  </button>
+                  <button
+                    onClick={handleDirectSearch}
+                    className="flex-1 py-3 border border-[#e5e7eb] text-[#111] rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f5f5f5] transition-colors"
+                  >
+                    직접 검색하기
+                  </button>
+                </div>
               </div>
-            </div>
-          )
-        }]);
+            )
+          }]);
+        } else {
+          // 페르소나 없을 때 → 기존 플로우 (자유여행/패키지 선택)
+          setMessages(prev => [...prev, {
+            type: "bot",
+            content: (
+              <div>
+                <p className="text-[14px] text-[#111] leading-[1.5] mb-3">
+                  자유여행을 선호하세요? 아니면 편한 패키지 상품을 추천해드릴까요?
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleTravelTypeSelect("fit")}
+                    className="flex-1 py-3 bg-[#7b3ff2] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#6930d9] transition-colors"
+                  >
+                    자유여행
+                  </button>
+                  <button
+                    onClick={() => handleTravelTypeSelect("package")}
+                    className="flex-1 py-3 bg-[#3780ff] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#2563eb] transition-colors"
+                  >
+                    패키지 상품
+                  </button>
+                </div>
+              </div>
+            )
+          }]);
+        }
       } else if (message.includes("비교")) {
         handleComparePackages();
       } else if (message.includes("자유여행")) {
@@ -693,6 +759,67 @@ export default function App() {
           content: responseMessage
         }]);
       }
+    }, 500);
+  };
+
+  // 페르소나 기반 추천 검색
+  const handlePersonaSearch = () => {
+    if (!userPersona) return;
+
+    setMessages(prev => [...prev, { type: "user", content: "추천 검색하기" }]);
+
+    if (userPersona.productType === "package") {
+      setTravelType("package");
+    } else {
+      setTravelType("fit");
+      const modeMap: Record<string, 'combo' | 'flight' | 'hotel'> = {
+        "fit-combo": "combo",
+        "fit-flight": "flight",
+        "fit-hotel": "hotel"
+      };
+      setFitSearchMode(modeMap[userPersona.productType]);
+    }
+
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        type: "bot",
+        content: "이전 검색 기록을 기반으로 정보를 미리 채워드렸어요. 확인 후 검색해주세요!"
+      }]);
+      setExtractedDestination(userPersona.destination);
+      setShowPreferenceInput(true);
+      setStep("preference");
+    }, 500);
+  };
+
+  // 직접 검색하기
+  const handleDirectSearch = () => {
+    setMessages(prev => [...prev, { type: "user", content: "직접 검색하기" }]);
+
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        type: "bot",
+        content: (
+          <div>
+            <p className="text-[14px] text-[#111] leading-[1.5] mb-3">
+              자유여행을 선호하세요? 아니면 편한 패키지 상품을 추천해드릴까요?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleTravelTypeSelect("fit")}
+                className="flex-1 py-3 bg-[#7b3ff2] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#6930d9] transition-colors"
+              >
+                자유여행
+              </button>
+              <button
+                onClick={() => handleTravelTypeSelect("package")}
+                className="flex-1 py-3 bg-[#3780ff] text-white rounded-[12px] text-[14px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#2563eb] transition-colors"
+              >
+                패키지 상품
+              </button>
+            </div>
+          </div>
+        )
+      }]);
     }, 500);
   };
 
@@ -856,6 +983,7 @@ export default function App() {
 
   // 추천 다시받기
   const handleReRecommend = () => {
+    // 새 추천 상품 계산
     const currentIds = new Set(recommendedPackages.map(p => p.id));
     const remaining = mockPackages.filter(p => !currentIds.has(p.id));
 
@@ -867,14 +995,204 @@ export default function App() {
       newRecommendations = shuffled.slice(0, 3);
     }
 
-    setRecommendedPackages(newRecommendations);
+    // 1) 기존 카드 즉시 삭제 + 비교 상태 초기화
+    setRecommendedPackages([]);
     setPackageMessages([]);
     setShowComparison(false);
     setComparisonPackages([]);
-    setMessages(prev => [...prev, {
-      type: "bot",
-      content: `다른 추천 상품 ${newRecommendations.length}개를 찾았습니다! 확인해보세요.`
-    }]);
+
+    // 2) 유저 메시지 + AI 검색 과정을 채팅 흐름에 추가
+    setMessages(prev => [...prev,
+      { type: "user", content: "다른 상품 추천해주세요" },
+      {
+        type: "bot",
+        content: (
+          <AgentReasoningBlock
+            steps={REASONING_STEPS.PACKAGE_SEARCH}
+            completedLabel="새로운 상품 검색 완료"
+            onAllStepsComplete={() => {
+              // 3) 검색 완료 후 새 카드 세팅 + 안내 메시지
+              setRecommendedPackages(newRecommendations);
+              setMessages(prev => [...prev, {
+                type: "bot",
+                content: `다른 추천 상품 ${newRecommendations.length}개를 찾았습니다! 확인해보세요.`
+              }]);
+            }}
+          />
+        )
+      }
+    ]);
+  };
+
+  // FIT 콤보 비교
+  const handleFitCompare = () => {
+    if (fitPackages.length >= 2) {
+      setFitMessages([
+        { type: "user", content: "조합 비교해주세요" },
+        {
+          type: "bot",
+          content: (
+            <AgentReasoningBlock
+              steps={REASONING_STEPS.COMPARISON}
+              completedLabel="비교 분석 완료"
+              onAllStepsComplete={() => {
+                setComparisonFitPackages(fitPackages.slice(0, 3));
+                setShowFitComparison(true);
+                setFitMessages(prev => [...prev, {
+                  type: "bot",
+                  content: "항공+숙소 조합의 가격, 항공사, 호텔등급 등을 비교해 드립니다!"
+                }]);
+              }}
+            />
+          )
+        }
+      ]);
+    }
+  };
+
+  // 항공편 비교
+  const handleFlightCompare = () => {
+    if (flights.length >= 2) {
+      setFitMessages([
+        { type: "user", content: "항공편 비교해주세요" },
+        {
+          type: "bot",
+          content: (
+            <AgentReasoningBlock
+              steps={REASONING_STEPS.COMPARISON}
+              completedLabel="비교 분석 완료"
+              onAllStepsComplete={() => {
+                setComparisonFlights(flights.slice(0, 3));
+                setShowFlightComparison(true);
+                setFitMessages(prev => [...prev, {
+                  type: "bot",
+                  content: "항공편의 가격, 항공사, 비행시간 등을 비교해 드립니다!"
+                }]);
+              }}
+            />
+          )
+        }
+      ]);
+    }
+  };
+
+  // 숙소 비교
+  const handleHotelCompare = () => {
+    if (hotels.length >= 2) {
+      setFitMessages([
+        { type: "user", content: "숙소 비교해주세요" },
+        {
+          type: "bot",
+          content: (
+            <AgentReasoningBlock
+              steps={REASONING_STEPS.COMPARISON}
+              completedLabel="비교 분석 완료"
+              onAllStepsComplete={() => {
+                setComparisonHotels(hotels.slice(0, 3));
+                setShowHotelComparison(true);
+                setFitMessages(prev => [...prev, {
+                  type: "bot",
+                  content: "숙소의 가격, 등급, 위치 등을 비교해 드립니다!"
+                }]);
+              }}
+            />
+          )
+        }
+      ]);
+    }
+  };
+
+  // FIT 콤보 추천 다시받기
+  const handleFitReRecommend = () => {
+    const shuffled = [...mockFITPackages].sort(() => Math.random() - 0.5);
+    const newRecommendations = shuffled.slice(0, 3);
+
+    setFitPackages([]);
+    setFitMessages([]);
+    setShowFitComparison(false);
+    setComparisonFitPackages([]);
+
+    setMessages(prev => [...prev,
+      { type: "user", content: "다른 조합 추천해주세요" },
+      {
+        type: "bot",
+        content: (
+          <AgentReasoningBlock
+            steps={REASONING_STEPS.FIT_SEARCH_COMBO}
+            completedLabel="새로운 조합 검색 완료"
+            onAllStepsComplete={() => {
+              setFitPackages(newRecommendations);
+              setMessages(prev => [...prev, {
+                type: "bot",
+                content: `다른 추천 조합 ${newRecommendations.length}개를 찾았습니다! 확인해보세요.`
+              }]);
+            }}
+          />
+        )
+      }
+    ]);
+  };
+
+  // 항공편 추천 다시받기
+  const handleFlightReRecommend = () => {
+    const shuffled = [...mockFlights].sort(() => Math.random() - 0.5);
+    const newRecommendations = shuffled.slice(0, 3);
+
+    setFlights([]);
+    setFitMessages([]);
+    setShowFlightComparison(false);
+    setComparisonFlights([]);
+
+    setMessages(prev => [...prev,
+      { type: "user", content: "다른 항공편 추천해주세요" },
+      {
+        type: "bot",
+        content: (
+          <AgentReasoningBlock
+            steps={REASONING_STEPS.FIT_SEARCH_FLIGHT}
+            completedLabel="새로운 항공편 검색 완료"
+            onAllStepsComplete={() => {
+              setFlights(newRecommendations);
+              setMessages(prev => [...prev, {
+                type: "bot",
+                content: `다른 추천 항공편 ${newRecommendations.length}개를 찾았습니다! 확인해보세요.`
+              }]);
+            }}
+          />
+        )
+      }
+    ]);
+  };
+
+  // 숙소 추천 다시받기
+  const handleHotelReRecommend = () => {
+    const shuffled = [...mockHotels].sort(() => Math.random() - 0.5);
+    const newRecommendations = shuffled.slice(0, 3);
+
+    setHotels([]);
+    setFitMessages([]);
+    setShowHotelComparison(false);
+    setComparisonHotels([]);
+
+    setMessages(prev => [...prev,
+      { type: "user", content: "다른 숙소 추천해주세요" },
+      {
+        type: "bot",
+        content: (
+          <AgentReasoningBlock
+            steps={REASONING_STEPS.FIT_SEARCH_HOTEL}
+            completedLabel="새로운 숙소 검색 완료"
+            onAllStepsComplete={() => {
+              setHotels(newRecommendations);
+              setMessages(prev => [...prev, {
+                type: "bot",
+                content: `다른 추천 숙소 ${newRecommendations.length}개를 찾았습니다! 확인해보세요.`
+              }]);
+            }}
+          />
+        )
+      }
+    ]);
   };
 
   // 예약하기 - 바로 예약자 정보 입력 팝업 표시
@@ -948,6 +1266,8 @@ export default function App() {
             onSubmit={handlePreferenceSubmit}
             mode={travelType || "package"}
             initialDestination={extractedDestination}
+            initialBudget={userPersona?.budget}
+            initialTheme={userPersona?.theme}
           />
         )}
 
@@ -993,7 +1313,7 @@ export default function App() {
 
         {/* 자유여행 FIT 패키지 표시 (항공+숙소 조합) */}
         {step === "fit-packages" && fitSearchMode === 'combo' && fitPackages.length > 0 && (
-          <div className="px-5 space-y-4 mt-4">
+          <div className="px-5 space-y-4 mt-4 mb-4">
             {fitPackages.map((pkg, index) => (
               <FITPackageCard
                 key={pkg.id}
@@ -1014,22 +1334,28 @@ export default function App() {
                 }}
               />
             ))}
-
-            {/* FIT 패키지 인터랙션 메시지 */}
-            {fitMessages.map((msg, index) => (
-              <ChatMessage
-                key={`fit-${index}`}
-                type={msg.type}
-              >
-                {msg.content}
-              </ChatMessage>
-            ))}
+            {fitPackages.length >= 2 && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleFitCompare}
+                  className="flex-1 py-3 bg-white border-2 border-[#7b3ff2] text-[#7b3ff2] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f4ff] transition-colors"
+                >
+                  조합 비교하기
+                </button>
+                <button
+                  onClick={handleFitReRecommend}
+                  className="flex-1 py-3 bg-white border-2 border-[#e5e7eb] text-[#666] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f9fa] transition-colors"
+                >
+                  추천 다시받기
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* 항공편만 표시 */}
         {step === "fit-packages" && fitSearchMode === 'flight' && flights.length > 0 && (
-          <div className="px-5 space-y-4 mt-4">
+          <div className="px-5 space-y-4 mt-4 mb-4">
             {flights.map((flight, index) => (
               <FlightCard
                 key={flight.id}
@@ -1047,13 +1373,28 @@ export default function App() {
                 }}
               />
             ))}
-
+            {flights.length >= 2 && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleFlightCompare}
+                  className="flex-1 py-3 bg-white border-2 border-[#7b3ff2] text-[#7b3ff2] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f4ff] transition-colors"
+                >
+                  항공편 비교하기
+                </button>
+                <button
+                  onClick={handleFlightReRecommend}
+                  className="flex-1 py-3 bg-white border-2 border-[#e5e7eb] text-[#666] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f9fa] transition-colors"
+                >
+                  추천 다시받기
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* 호텔만 표시 */}
         {step === "fit-packages" && fitSearchMode === 'hotel' && hotels.length > 0 && (
-          <div className="px-5 space-y-4 mt-4">
+          <div className="px-5 space-y-4 mt-4 mb-4">
             {hotels.map((hotel, index) => (
               <HotelCard
                 key={hotel.id}
@@ -1071,9 +1412,34 @@ export default function App() {
                 }}
               />
             ))}
-
+            {hotels.length >= 2 && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleHotelCompare}
+                  className="flex-1 py-3 bg-white border-2 border-[#7b3ff2] text-[#7b3ff2] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f4ff] transition-colors"
+                >
+                  숙소 비교하기
+                </button>
+                <button
+                  onClick={handleHotelReRecommend}
+                  className="flex-1 py-3 bg-white border-2 border-[#e5e7eb] text-[#666] rounded-[12px] text-[15px] font-['Pretendard:SemiBold',sans-serif] hover:bg-[#f8f9fa] transition-colors"
+                >
+                  추천 다시받기
+                </button>
+              </div>
+            )}
           </div>
         )}
+
+        {/* FIT 인터랙션 메시지 (비교 등) - 카드 블록 외부 */}
+        {step === "fit-packages" && fitMessages.map((msg, index) => (
+          <ChatMessage
+            key={`fit-${index}`}
+            type={msg.type}
+          >
+            {msg.content}
+          </ChatMessage>
+        ))}
 
         {/* 액티비티 선택 화면 */}
         {step === "fit-activities" && showActivitySelector && (
@@ -1130,6 +1496,42 @@ export default function App() {
             setSelectedPackage(pkg);
             setShowComparison(false);
             setShowDetail(true);
+          }}
+        />
+      )}
+
+      {showFitComparison && comparisonFitPackages.length > 0 && (
+        <FITComparison
+          packages={comparisonFitPackages}
+          onClose={() => setShowFitComparison(false)}
+          onSelect={(pkg) => {
+            setSelectedFitPackage(pkg);
+            setShowFitComparison(false);
+            setShowFitDetail(true);
+          }}
+        />
+      )}
+
+      {showFlightComparison && comparisonFlights.length > 0 && (
+        <FlightComparison
+          flights={comparisonFlights}
+          onClose={() => setShowFlightComparison(false)}
+          onSelect={(flight) => {
+            setSelectedFlight(flight);
+            setShowFlightComparison(false);
+            setShowFlightDetail(true);
+          }}
+        />
+      )}
+
+      {showHotelComparison && comparisonHotels.length > 0 && (
+        <HotelComparison
+          hotels={comparisonHotels}
+          onClose={() => setShowHotelComparison(false)}
+          onSelect={(hotel) => {
+            setSelectedHotel(hotel);
+            setShowHotelComparison(false);
+            setShowHotelDetail(true);
           }}
         />
       )}

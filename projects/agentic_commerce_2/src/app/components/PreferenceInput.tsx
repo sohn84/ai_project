@@ -5,13 +5,16 @@ interface PreferenceInputProps {
   onSubmit: (data: { theme: string; budget: string; destination: string; travelers: number; searchMode?: 'combo' | 'flight' | 'hotel' }) => void;
   mode?: "package" | "fit"; // 패키지 또는 자유여행 모드
   initialDestination?: string;
+  initialBudget?: string;
+  initialTheme?: string;
+  initialTravelers?: number;
 }
 
-export function PreferenceInput({ onSubmit, mode = "package", initialDestination = "" }: PreferenceInputProps) {
-  const [theme, setTheme] = useState("");
-  const [budget, setBudget] = useState("");
+export function PreferenceInput({ onSubmit, mode = "package", initialDestination = "", initialBudget = "", initialTheme = "", initialTravelers = 1 }: PreferenceInputProps) {
+  const [theme, setTheme] = useState(initialTheme);
+  const [budget, setBudget] = useState(initialBudget);
   const [destination, setDestination] = useState(initialDestination);
-  const [travelers, setTravelers] = useState(1);
+  const [travelers, setTravelers] = useState(initialTravelers);
 
   const [searchMode, setSearchMode] = useState<'combo' | 'flight' | 'hotel'>('combo');
 

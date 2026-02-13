@@ -17,7 +17,7 @@ export function ChatMessage({ type, children, showActions = false, onGood, onBad
         animate={{ opacity: 1, y: 0 }}
         className="flex justify-end mb-4 px-5"
       >
-        <div className="bg-[#3780ff] text-white rounded-tl-[24px] rounded-bl-[24px] rounded-br-[24px] px-5 py-3 max-w-[270px]">
+        <div className="bg-[#3780ff] text-white rounded-tl-[24px] rounded-bl-[24px] rounded-br-[24px] px-5 py-3 max-w-[270px] text-[14px]">
           {children}
         </div>
       </motion.div>
