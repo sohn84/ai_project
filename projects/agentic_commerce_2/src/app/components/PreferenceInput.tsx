@@ -4,13 +4,15 @@ import { motion } from "motion/react";
 interface PreferenceInputProps {
   onSubmit: (data: { theme: string; budget: string; destination: string; travelers: number; searchMode?: 'combo' | 'flight' | 'hotel' }) => void;
   mode?: "package" | "fit"; // 패키지 또는 자유여행 모드
+  initialDestination?: string;
 }
 
-export function PreferenceInput({ onSubmit, mode = "package" }: PreferenceInputProps) {
+export function PreferenceInput({ onSubmit, mode = "package", initialDestination = "" }: PreferenceInputProps) {
   const [theme, setTheme] = useState("");
   const [budget, setBudget] = useState("");
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState(initialDestination);
   const [travelers, setTravelers] = useState(1);
+
   const [searchMode, setSearchMode] = useState<'combo' | 'flight' | 'hotel'>('combo');
 
   const themes = ["휴양", "문화탐방", "자연경관", "레저/액티비티", "쇼핑"];
@@ -64,11 +66,10 @@ export function PreferenceInput({ onSubmit, mode = "package" }: PreferenceInputP
                 <button
                   key={t}
                   onClick={() => setTheme(t)}
-                  className={`px-4 py-2 rounded-full text-[14px] transition-colors ${
-                    theme === t
+                  className={`px-4 py-2 rounded-full text-[14px] transition-colors ${theme === t
                       ? "bg-[#3780ff] text-white"
                       : "bg-[#f5f5f5] text-[#666] hover:bg-[#e5e5e5]"
-                  }`}
+                    }`}
                 >
                   {t}
                 </button>
@@ -84,13 +85,12 @@ export function PreferenceInput({ onSubmit, mode = "package" }: PreferenceInputP
               <button
                 key={b}
                 onClick={() => setBudget(b)}
-                className={`px-4 py-3 rounded-[12px] text-[14px] transition-colors ${
-                  budget === b
-                    ? mode === "fit" 
+                className={`px-4 py-3 rounded-[12px] text-[14px] transition-colors ${budget === b
+                    ? mode === "fit"
                       ? "bg-[#7b3ff2] text-white"
                       : "bg-[#3780ff] text-white"
                     : "bg-[#f5f5f5] text-[#666] hover:bg-[#e5e5e5]"
-                }`}
+                  }`}
               >
                 {b}
               </button>

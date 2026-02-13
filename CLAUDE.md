@@ -2,6 +2,11 @@
 
 이 문서는 Claude가 바이브코딩 AI 프로젝트에서 작업할 때 항상 따라야 할 규칙과 가이드라인입니다.
 
+## 0. Safety & Permissions (CRITICAL)
+
+- **Mandatory Approval**: ALWAYS provide an `implementation_plan.md` and wait for explicit user approval before making any file modifications or running potentially destructive commands.
+- **Task View**: Use `task_boundary` and `task.md` to show progress on complex tasks.
+
 ## 1. 프로젝트 개요
 
 **바이브코딩 AI 프로젝트 모노레포**

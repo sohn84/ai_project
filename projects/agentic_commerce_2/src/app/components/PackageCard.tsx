@@ -15,6 +15,7 @@ export interface PackageData {
   departure: string;
   availableSeats: number;
   highlights: string[];
+  recommendReason: string;
 }
 
 interface PackageCardProps {
@@ -40,6 +41,14 @@ export function PackageCard({ package: pkg, onClick, onBooking, rank }: PackageC
         </div>
       )}
       
+      {/* AI 추천 이유 */}
+      <div className="flex gap-2 bg-[#f0f4ff] rounded-[8px] px-3 py-2.5 mx-3 mt-3">
+        <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#3780ff]" />
+        <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+          {pkg.recommendReason}
+        </p>
+      </div>
+
       <div className="flex gap-3 p-3">
         {/* 썸네일 - 좌측 */}
         <div className="relative w-[100px] h-[100px] flex-shrink-0 rounded-[12px] overflow-hidden">

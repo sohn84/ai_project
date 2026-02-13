@@ -30,6 +30,14 @@ export function FlightDetail({ flight, onClose, onBooking }: FlightDetailProps) 
 
         {/* 컨텐츠 */}
         <div className="px-5 py-6">
+          {/* AI 추천 이유 */}
+          <div className="flex gap-2 bg-[#f5f0ff] rounded-[8px] px-3 py-2.5 mb-4">
+            <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#7b3ff2]" />
+            <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+              {flight.recommendReason}
+            </p>
+          </div>
+
           {/* 항공사 & 직항/경유 */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-3">

@@ -24,6 +24,7 @@ export interface FITPackageData {
   duration: string;
   destination: string;
   passengerCount: number;
+  recommendReason: string;
 }
 
 interface FITPackageCardProps {
@@ -57,6 +58,14 @@ export function FITPackageCard({
           <span className="text-[13px] text-[#7b3ff2] font-['Pretendard:Bold',sans-serif]">
             AI 추천 조합
           </span>
+        </div>
+
+        {/* AI 추천 이유 */}
+        <div className="flex gap-2 bg-[#f5f0ff] rounded-[8px] px-3 py-2.5 mb-3">
+          <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#7b3ff2]" />
+          <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+            {pkg.recommendReason}
+          </p>
         </div>
 
         {/* 항공 정보 */}

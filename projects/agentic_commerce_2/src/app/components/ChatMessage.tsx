@@ -32,7 +32,7 @@ export function ChatMessage({ type, children, showActions = false, onGood, onBad
     >
       <div className="flex gap-2 items-start">
         <div className="flex-1">
-          <div className="text-[#111] max-w-full">
+          <div className="text-[14px] text-[#111] max-w-full">
             {children}
           </div>
           {showActions && (

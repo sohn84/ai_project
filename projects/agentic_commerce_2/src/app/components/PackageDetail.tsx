@@ -34,7 +34,15 @@ export function PackageDetail({ package: pkg, onClose, onBooking }: PackageDetai
 
         <div className="p-5">
           <img src={pkg.image} alt={pkg.title} className="w-full h-[200px] object-cover rounded-[16px] mb-4" />
-          
+
+          {/* AI 추천 이유 */}
+          <div className="flex gap-2 bg-[#f0f4ff] rounded-[8px] px-3 py-2.5 mb-4">
+            <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#3780ff]" />
+            <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+              {pkg.recommendReason}
+            </p>
+          </div>
+
           <h3 className="font-['Pretendard:Bold',sans-serif] text-[20px] text-[#111] mb-2">
             {pkg.title}
           </h3>

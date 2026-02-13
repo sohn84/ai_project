@@ -11,6 +11,7 @@ export interface HotelData {
   destination: string;
   passengerCount: number;
   image?: string;
+  recommendReason: string;
 }
 
 interface HotelCardProps {
@@ -36,6 +37,14 @@ export function HotelCard({ hotel, rank, onClick, onBooking }: HotelCardProps) {
           </div>
           <span className="text-[12px] text-[#7b3ff2] font-['Pretendard:SemiBold',sans-serif]">추천 숙소</span>
         </div>
+      </div>
+
+      {/* AI 추천 이유 */}
+      <div className="flex gap-2 bg-[#f5f0ff] rounded-[8px] px-3 py-2.5 mb-3">
+        <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#7b3ff2]" />
+        <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+          {hotel.recommendReason}
+        </p>
       </div>
 
       {/* 숙소 정보 */}

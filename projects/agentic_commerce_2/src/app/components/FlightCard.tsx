@@ -18,6 +18,7 @@ export interface FlightData {
   arrivalAirport?: string; // 도착 공항 상세
   baggage?: string; // 수하물 규정
   flightNumber?: string; // 항공편명
+  recommendReason: string;
 }
 
 interface FlightCardProps {
@@ -50,6 +51,14 @@ export function FlightCard({ flight, rank, onClick, onBooking }: FlightCardProps
         } font-['Pretendard:SemiBold',sans-serif]`}>
           {flight.isDirect ? "직항" : "경유"}
         </span>
+      </div>
+
+      {/* AI 추천 이유 */}
+      <div className="flex gap-2 bg-[#f5f0ff] rounded-[8px] px-3 py-2.5 mb-3">
+        <span className="shrink-0 w-[3px] self-stretch rounded-full bg-[#7b3ff2]" />
+        <p className="text-[13px] leading-[1.5] text-[#555] line-clamp-2">
+          {flight.recommendReason}
+        </p>
       </div>
 
       {/* 항공 정보 */}
